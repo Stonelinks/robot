@@ -5,10 +5,7 @@ module.exports = (config) => {
   config.set({
     frameworks: ['mocha'],
     reporters: ['coverage', 'mocha'],
-    browsers: process.env.TRAVIS // eslint-disable-line no-nested-ternary
-      ? ['ChromeTravis']
-      : process.env.APPVEYOR
-        ? ['IE'] : ['Chrome'],
+    browsers: ['Chrome'],
 
     autoWatch: false,
     singleRun: true,
@@ -31,13 +28,6 @@ module.exports = (config) => {
     // make Webpack bundle generation quiet
     webpackMiddleware: {
       noInfo: true,
-    },
-
-    customLaunchers: {
-      ChromeTravis: {
-        base: 'Chrome',
-        flags: ['--no-sandbox'],
-      },
     },
 
     coverageReporter: {
