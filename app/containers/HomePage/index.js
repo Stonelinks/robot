@@ -10,12 +10,16 @@
  */
 
 import React from 'react';
+import RaisedButton from '../../components/RaisedButton'
 
 export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   render() {
     return (
-      <h1>This is the Homepage!</h1>
+      <div>
+        <h1>This is the Homepage!</h1>
+        <RaisedButton label="funky funk machine" />
+      </div>
     );
   }
 }

@@ -18,6 +18,8 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import FontFaceObserver from 'fontfaceobserver';
 import useScroll from 'react-router-scroll';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import configureStore from './store';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
@@ -34,6 +36,10 @@ robotoObserver.check().then(() => {
 }, () => {
   document.body.classList.remove(styles.fontLoaded);
 });
+
+// material-ui needs this for onTouchTap
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -59,31 +65,33 @@ const rootRoute = {
 };
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router
-      history={history}
-      routes={rootRoute}
-      render={
-        // Scroll to top when going to a new page, imitating default browser
-        // behaviour
-        applyRouterMiddleware(
-          useScroll(
-            (prevProps, props) => {
-              if (!prevProps || !props) {
+  <MuiThemeProvider muiTheme={getMuiTheme()}>
+    <Provider store={store}>
+      <Router
+        history={history}
+        routes={rootRoute}
+        render={
+          // Scroll to top when going to a new page, imitating default browser
+          // behaviour
+          applyRouterMiddleware(
+            useScroll(
+              (prevProps, props) => {
+                if (!prevProps || !props) {
+                  return true;
+                }
+
+                if (prevProps.location.pathname !== props.location.pathname) {
+                  return [0, 0];
+                }
+
                 return true;
               }
-
-              if (prevProps.location.pathname !== props.location.pathname) {
-                return [0, 0];
-              }
-
-              return true;
-            }
+            )
           )
-        )
-      }
-    />
-  </Provider>,
+        }
+      />
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('app')
 );
 
