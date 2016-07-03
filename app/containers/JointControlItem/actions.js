@@ -11,10 +11,19 @@ import {
 import io from 'socket.io-client';
 import _ from 'lodash';
 
+function getSocketURL(jointName) {
+  return `${window.location.protocol}//${window.location.hostname}:3001/api/robots/7bot/devices/${jointName}`
+}
+
 let _jointSockets = {};
 function getOrCreateJointSocket(jointName) {
   if (!_jointSockets[jointName]) {
-    _jointSockets[jointName] = io(`${window.location.protocol}//${window.location.hostname}:3001/api/robots/7bot/devices/${jointName}`);
+    let socket = io(getSocketURL(jointName));
+    // socket.on('/', function() {
+    //   debugger
+    // })
+    // socket.emit('/')
+    _jointSockets[jointName] = socket
   }
   return _jointSockets[jointName];
 }

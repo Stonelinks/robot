@@ -28,7 +28,7 @@ Cylon.robot({
   name: '7bot',
 
   connections: {
-    arduino: { adaptor: 'firmata', port: process.env.CYLON_PORT || '/dev/ttyACM0' },
+    arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' },
   },
 
   devices: config.devices,
@@ -62,7 +62,7 @@ module.exports = {
   start: function () {
     Cylon.api('socketio', {
       host: '0.0.0.0',
-      port: process.env.CYLON_PORT || '3001',
+      port: '3001',
     });
 
     Cylon.start();
