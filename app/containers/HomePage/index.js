@@ -10,15 +10,16 @@
  */
 
 import React from 'react';
-import RaisedButton from '../../components/RaisedButton'
+import AppBar from '../../components/AppBar';
+import JointControl from '../JointControl';
 
 export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   render() {
     return (
       <div>
-        <h1>This is the Homepage!</h1>
-        <RaisedButton label="funky funk machine" />
+        <AppBar title="Robot" iconElementLeft={<div />} />
+        <JointControl />
       </div>
     );
   }

@@ -1,10 +1,10 @@
 /* Global styles */
 
-/*html,
+html,
 body {
   height: 100%;
   width: 100%;
-}*/
+}
 
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -12,4 +12,9 @@ body {
 
 body.fontLoaded {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.hidden {
+  display: none;
+  pointer-events: none;
 }
