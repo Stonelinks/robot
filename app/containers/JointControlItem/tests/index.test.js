@@ -1,9 +1,9 @@
-import JointControlItem from '../index';
-
-import expect from 'expect';
-import { shallow } from 'enzyme';
-import React from 'react';
-
-describe('<JointControlItem />', () => {
-
-});
+// import JointControlItem from '../index';
+//
+// import expect from 'expect';
+// import { shallow } from 'enzyme';
+// import React from 'react';
+//
+// describe('<JointControlItem />', () => {
+//
+// });

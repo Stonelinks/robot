@@ -8,7 +8,7 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 
 
-function _AppBar(props) {
+function _AppBar(props) { // eslint-disable-line no-underscore-dangle
   return (
     <AppBar {...props} />
   );

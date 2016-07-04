@@ -5,25 +5,27 @@
  */
 
 import React from 'react';
-import { connect } from 'react-redux';
 import styles from './styles.css';
 import JointControlItem from '../JointControlItem';
 import robotConfig from '../../../robotConfig';
 
+const joints = [
+  'joint0',
+  'joint1',
+  'joint2',
+  'joint3',
+  'joint4',
+  'joint5',
+];
+
 export class JointControl extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
-
-    let jointComponents = [];
-    for (let deviceName in robotConfig.devices) {
-      if (deviceName.startsWith('joint')) {
-        let device = robotConfig.devices[deviceName];
-        jointComponents.push(<JointControlItem key={deviceName} name={deviceName} min={device.limits.bottom} max={device.limits.top} />);
-      }
-    }
-
     return (
       <div className={styles.jointControl}>
-        {jointComponents}
+        {joints.map((jointName) => {
+          const joint = robotConfig.devices[jointName];
+          return <JointControlItem key={jointName} name={jointName} min={joint.limits.bottom} max={joint.limits.top} />;
+        })}
       </div>
     );
   }

@@ -13,6 +13,11 @@ import H3 from '../../components/H3';
 import Slider from '../../components/Slider';
 
 export class JointControlItem extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+  proxySliderChange(mouseEvent, value) {
+    this.props.onSliderChange(this.props.name, value);
+  }
+
   render() {
     return (
       <div className={styles.jointControlItem}>
@@ -21,16 +26,13 @@ export class JointControlItem extends React.Component { // eslint-disable-line r
       </div>
     );
   }
-
-  proxySliderChange(mouseEvent, value) {
-    this.props.onSliderChange(this.props.name, value);
-  }
 }
 
 JointControlItem.propTypes = {
   name: PropTypes.string,
   min: PropTypes.number,
   max: PropTypes.number,
+  onSliderChange: PropTypes.func,
 };
 
 const mapStateToProps = selectJointControlItem();

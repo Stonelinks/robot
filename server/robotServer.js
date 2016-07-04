@@ -1,4 +1,3 @@
-'use strict';
 
 /*
 Below is some information about which pins control which servos (aka joints).
@@ -18,10 +17,9 @@ Left Button; Readout D71
 Right Button; Readout D70
 */
 
-var fs = require('fs');
-var config = require('../robotConfig.js');
+const config = require('../robotConfig.js');
 
-var Cylon = require('cylon');
+const Cylon = require('cylon');
 
 Cylon.robot({
 
@@ -33,24 +31,24 @@ Cylon.robot({
 
   devices: config.devices,
 
-  work: function () {
+  work: () => {
     // interact with robot via socket API from the browser
     // See: frontend/app/src/x-app.html
   },
 
-  commands: function () {
+  commands: () => { // eslint-disable-line arrow-body-style
     return {
       turn_pump_on: this.turnPumpOn,
       turn_pump_off: this.turnPumpOff,
     };
   },
 
-  turnPumpOn: function () {
+  turnPumpOn: () => {
     this.pumpmotor.turnOn();
     this.pumpvalve.turnOff();
   },
 
-  turnPumpOff: function () {
+  turnPumpOff: () => {
     this.pumpmotor.turnOff();
     this.pumpvalve.turnOn();
     console.log('sup');
@@ -59,12 +57,11 @@ Cylon.robot({
 
 
 module.exports = {
-  start: function () {
+  start: () => {
     Cylon.api('socketio', {
       host: '0.0.0.0',
       port: '3001',
     });
-
     Cylon.start();
   },
 };
