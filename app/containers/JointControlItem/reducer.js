@@ -10,13 +10,25 @@ import {
 } from './constants';
 
 const initialState = fromJS({
-  angle: 0,
+  isInital: true,
+  joints: {},
 });
-
 function jointControlItemReducer(state = initialState, action) {
+  // hack to load window.initialSyncData correctly
+  if (state.get('isInital')) {
+    state = fromJS({ // eslint-disable-line
+      isInital: false,
+      joints: window.initialSyncData.joints,
+    });
+  }
+
+  let joints = state.get('joints');
   switch (action.type) {
     case CHANGE_ANGLE:
-      return state.set('angle', action.angle);
+      joints = joints.set(action.jointName, {
+        angle: action.angle,
+      });
+      return state.set('joints', joints);
     default:
       return state;
   }

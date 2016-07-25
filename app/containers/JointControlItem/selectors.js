@@ -14,12 +14,14 @@ const selectJointControlItemDomain = () => state => state.get('jointControlItem'
  * Default selector used by JointControlItem
  */
 
-const selectJointControlItem = () => createSelector(
-  selectJointControlItemDomain(),
-  (substate) => substate.toJS()
-);
+const selectJointControlItem = () => (state, props) => {
+  const jointName = props.name;
+  return createSelector(
+    selectJointControlItemDomain(),
+    (substate) => ({
+      value: substate.toJS().joints[jointName].angle,
+    })
+  );
+};
 
 export default selectJointControlItem;
-export {
-  selectJointControlItemDomain,
-};

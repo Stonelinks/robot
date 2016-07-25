@@ -9,7 +9,6 @@ import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
-const devtools = window.devToolsExtension || (() => noop => noop);
 
 export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
@@ -22,7 +21,7 @@ export default function configureStore(initialState = {}, history) {
 
   const enhancers = [
     applyMiddleware(...middlewares),
-    devtools(),
+    window.devToolsExtension ? window.devToolsExtension() : f => f,
   ];
 
   const store = createStore(

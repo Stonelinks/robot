@@ -36,6 +36,13 @@ function routeReducer(state = routeInitialState, action) {
 }
 
 /**
+ * initialSyncData. This is just a passthrough.
+ */
+function initialSyncDataReducer() {
+  return window.initialSyncData
+}
+
+/**
  * Creates the main reducer with the asynchronously loaded ones
  */
 import jointControlItemReducer from 'containers/JointControlItem/reducer';
@@ -43,6 +50,7 @@ export default function createReducer(asyncReducers) {
   return combineReducers({
     route: routeReducer,
     jointControlItem: jointControlItemReducer,
+    initialSyncData: initialSyncDataReducer,
     ...asyncReducers,
   });
 }

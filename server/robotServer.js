@@ -27,15 +27,28 @@ class Joint {
   constructor(jointConfig) {
     this.name = jointConfig.name;
     this.servo = new five.Servo(jointConfig);
+    this.servo.center(robotConfig.SERVO_MOVE_DURATION_MS);
+    this.angle = this.servo.value;
     robotLogger.jointInit(jointConfig);
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      angle: this.angle,
+    };
+  }
+
+  moveServo(angle) {
+    this.angle = parseInt(angle, 10);
+    this.servo.to(angle, robotConfig.SERVO_MOVE_DURATION_MS);
   }
 
   onSocketConnect(socket) {
     socket.on(`${this.name}:servo`, (data) => {
-      const servoPos = parseInt(data.value, 10);
-      this.servo.to(servoPos);
+      this.moveServo(data.value);
       socket.broadcast.emit(`${this.name}:servo`, {
-        value: servoPos,
+        value: this.angle,
       });
     });
   }
@@ -57,13 +70,13 @@ class Robot {
     });
   }
 
-  mapJoints(cb) {
-    return this.joints.map((joint) => cb(joint));
-  }
-
   toJSON() {
+    const jointData = {};
+    this.forEachJoint((joint) => {
+      jointData[joint.name] = joint.toJSON();
+    });
     return {
-      joints: this.mapJoints((joint) => joint.toJSON()),
+      joints: jointData,
     };
   }
 
@@ -79,30 +92,6 @@ class Robot {
   }
 }
 
-// const Cylon = require('cylon');
-//
-// Cylon.robot({
-//
-//   name: '7bot',
-//
-//   connections: {
-//     arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' },
-//   },
-//
-//   devices: config.devices,
-//
-//   work: () => {
-//     // interact with robot via socket API from the browser
-//     // See: frontend/app/src/x-app.html
-//   },
-//
-//   commands: () => { // eslint-disable-line arrow-body-style
-//     return {
-//       turn_pump_on: this.turnPumpOn,
-//       turn_pump_off: this.turnPumpOff,
-//     };
-//   },
-//
 //   turnPumpOn: () => {
 //     this.pumpmotor.turnOn();
 //     this.pumpvalve.turnOff();
@@ -114,8 +103,6 @@ class Robot {
 //     console.log('sup');
 //   },
 // });
-//
-//
 
 module.exports = {
   start: (app) => {
