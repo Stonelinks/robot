@@ -1,3 +1,4 @@
+'use strict';
 
 /*
 Below is some information about which pins control which servos (aka joints).
@@ -17,51 +18,122 @@ Left Button; Readout D71
 Right Button; Readout D70
 */
 
-const config = require('../robotConfig.js');
+const robotConfig = require('../robotConfig');
+const robotLogger = require('./logger').robot;
 
-const Cylon = require('cylon');
+const five = require('johnny-five');
 
-Cylon.robot({
+class Joint {
+  constructor(jointConfig) {
+    this.name = jointConfig.name;
+    this.servo = new five.Servo(jointConfig);
+    robotLogger.jointInit(jointConfig);
+  }
 
-  name: '7bot',
+  onSocketConnect(socket) {
+    socket.on(`${this.name}:servo`, (data) => {
+      const servoPos = parseInt(data.value, 10);
+      this.servo.to(servoPos);
+      socket.broadcast.emit(`${this.name}:servo`, {
+        value: servoPos,
+      });
+    });
+  }
+}
 
-  connections: {
-    arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' },
-  },
+class Robot {
+  constructor() {
+    this.joints = robotConfig.devices.joints.map(this.createJoint);
+    robotLogger.start();
+  }
 
-  devices: config.devices,
+  createJoint(jointConfig) {
+    return new Joint(jointConfig);
+  }
 
-  work: () => {
-    // interact with robot via socket API from the browser
-    // See: frontend/app/src/x-app.html
-  },
+  forEachJoint(cb) {
+    this.joints.forEach((joint) => {
+      cb(joint);
+    });
+  }
 
-  commands: () => { // eslint-disable-line arrow-body-style
+  mapJoints(cb) {
+    return this.joints.map((joint) => cb(joint));
+  }
+
+  toJSON() {
     return {
-      turn_pump_on: this.turnPumpOn,
-      turn_pump_off: this.turnPumpOff,
+      joints: this.mapJoints((joint) => joint.toJSON()),
     };
-  },
+  }
 
-  turnPumpOn: () => {
-    this.pumpmotor.turnOn();
-    this.pumpvalve.turnOff();
-  },
+  onSocketConnect(socket) {
+    robotLogger.socketConnect(socket);
+    this.forEachJoint((joint) => {
+      joint.onSocketConnect(socket);
+    });
+  }
 
-  turnPumpOff: () => {
-    this.pumpmotor.turnOff();
-    this.pumpvalve.turnOn();
-    console.log('sup');
-  },
-});
+  onSocketDisconnect(socket) {
+    robotLogger.socketDisconnect(socket);
+  }
+}
 
+// const Cylon = require('cylon');
+//
+// Cylon.robot({
+//
+//   name: '7bot',
+//
+//   connections: {
+//     arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' },
+//   },
+//
+//   devices: config.devices,
+//
+//   work: () => {
+//     // interact with robot via socket API from the browser
+//     // See: frontend/app/src/x-app.html
+//   },
+//
+//   commands: () => { // eslint-disable-line arrow-body-style
+//     return {
+//       turn_pump_on: this.turnPumpOn,
+//       turn_pump_off: this.turnPumpOff,
+//     };
+//   },
+//
+//   turnPumpOn: () => {
+//     this.pumpmotor.turnOn();
+//     this.pumpvalve.turnOff();
+//   },
+//
+//   turnPumpOff: () => {
+//     this.pumpmotor.turnOff();
+//     this.pumpvalve.turnOn();
+//     console.log('sup');
+//   },
+// });
+//
+//
 
 module.exports = {
-  start: () => {
-    Cylon.api('socketio', {
-      host: '0.0.0.0',
-      port: '3001',
+  start: (app) => {
+    const board = new five.Board({
+      repl: false,
     });
-    Cylon.start();
+
+    board.on('ready', () => {
+      const robot = new Robot();
+      app.io.on('connection', (socket) => {
+        robot.onSocketConnect(socket);
+        socket.on('sync', () => {
+          socket.emit('sync', robot.toJSON());
+        });
+        socket.on('disconnect', () => {
+          robot.onSocketDisconnect(socket);
+        });
+      });
+    });
   },
 };

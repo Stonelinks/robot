@@ -32,6 +32,24 @@ Localhost: ${chalk.magenta(`http://localhost:${port}`)}
 ${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}
     `);
   },
+
+  robot: {
+    start: () => {
+      console.log(`Robot initialised ${chalk.green('✓')}`);
+    },
+
+    jointInit: (jointConfig) => {
+      console.log(`${jointConfig.name} initialised on pin ${jointConfig.pin} ${chalk.green('✓')}`);
+    },
+
+    socketConnect: (socket) => {
+      console.log(chalk.green(`${socket.id} connected`));
+    },
+
+    socketDisconnect: (socket) => {
+      console.log(chalk.red(`${socket.id} disconnected`));
+    },
+  },
 };
 
 module.exports = logger;

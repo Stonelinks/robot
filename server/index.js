@@ -10,6 +10,11 @@ const frontend = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
+const http = require('http');
+
+const socket = require('socket.io');
+
+const io = socket();
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -23,13 +28,16 @@ app.use(frontend(webpackConfig));
 
 const port = process.env.PORT || 3000;
 
-// Start your app.
-app.listen(port, (err) => {
+const server = http.createServer(app);
+app.io = io;
+app.io.attach(server);
+server.listen(port, (err) => {
   if (err) {
     return logger.error(err);
   }
 
-  robotServer.start();
+  // Start your app.
+  robotServer.start(app);
 
   // Connect to ngrok in dev mode
   if (isDev) {
