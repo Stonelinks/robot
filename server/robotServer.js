@@ -23,11 +23,13 @@ const robotLogger = require('./logger').robot;
 
 const five = require('johnny-five');
 
+const SERVO_MOVE_DURATION_MS = process.env.SERVO_MOVE_DURATION_MS || 500;
+
 class Joint {
   constructor(jointConfig) {
     this.name = jointConfig.name;
     this.servo = new five.Servo(jointConfig);
-    this.servo.center(robotConfig.SERVO_MOVE_DURATION_MS);
+    this.servo.center(SERVO_MOVE_DURATION_MS);
     this.angle = this.servo.value;
     robotLogger.jointInit(jointConfig);
   }
@@ -41,7 +43,7 @@ class Joint {
 
   moveServo(angle) {
     this.angle = parseInt(angle, 10);
-    this.servo.to(angle, robotConfig.SERVO_MOVE_DURATION_MS);
+    this.servo.to(angle, SERVO_MOVE_DURATION_MS);
   }
 
   onSocketConnect(socket) {

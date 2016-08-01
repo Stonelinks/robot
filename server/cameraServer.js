@@ -6,8 +6,8 @@ const EventEmitter = require('events').EventEmitter;
 const inherits = require('util').inherits;
 const cameraLogger = require('./logger').camera;
 
-const DEVICE = process.env.VIDEO_DEVICE || '/dev/video0';
-const CAPTURE_INTERVAL_MS = process.env.VIDEO_CAPTURE_INTERVAL_MS || 120;
+const VIDEO_DEVICE = process.env.VIDEO_DEVICE || '/dev/video0';
+const VIDEO_CAPTURE_INTERVAL_MS = process.env.VIDEO_CAPTURE_INTERVAL_MS || 120;
 
 function Camera() {
   EventEmitter.call(this);
@@ -16,9 +16,9 @@ function Camera() {
 inherits(Camera, EventEmitter);
 
 Camera.prototype.start = function () {
-  cam.start(DEVICE, 620, 480);
-  setInterval(this.captureFrame.bind(this), CAPTURE_INTERVAL_MS);
-  cameraLogger.start(DEVICE);
+  cam.start(VIDEO_DEVICE, 620, 480);
+  setInterval(this.captureFrame.bind(this), VIDEO_CAPTURE_INTERVAL_MS);
+  cameraLogger.start(VIDEO_DEVICE);
 };
 
 Camera.prototype.captureFrame = function () {
