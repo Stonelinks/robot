@@ -18,7 +18,7 @@ export default class HomePage extends React.Component { // eslint-disable-line r
   render() {
     return (
       <div>
-        <AppBar title="Robot" iconElementLeft={<div />} />
+        <AppBar title="Luke's Robot" iconElementLeft={<div />} />
         <JointControl />
       </div>
     );

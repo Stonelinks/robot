@@ -1,6 +1,6 @@
 module.exports = {
   SERVO_MOVE_DURATION_MS: 500,
-  
+
   devices: {
     joints: [
       {

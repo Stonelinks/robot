@@ -9,14 +9,9 @@ import { connect } from 'react-redux';
 import selectJointControlItem from './selectors';
 import styles from './styles.css';
 import { changeAngle } from './actions';
-import H3 from '../../components/H3';
 import Slider from '../../components/Slider';
 
 export class JointControlItem extends React.Component { // eslint-disable-line react/prefer-stateless-function
-
-  componentWillReceiveProps(props) {
-    console.log(this.props.name, props.value);
-  }
   componentDidMount() {
     window.socket.on(`${this.props.name}:servo`, (servoData) => {
       this.props.onWebsocketEvent(this.props.name, servoData.value);
@@ -30,8 +25,7 @@ export class JointControlItem extends React.Component { // eslint-disable-line r
   render() {
     return (
       <div className={styles.jointControlItem}>
-        <H3><code>{this.props.name}</code></H3>
-        <Slider min={this.props.min} max={this.props.max} value={this.props.value} onChange={::this.proxySliderChange} />
+        <Slider name={this.props.name} min={this.props.min} max={this.props.max} value={this.props.value} onChange={::this.proxySliderChange} />
       </div>
     );
   }

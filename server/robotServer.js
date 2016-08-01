@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; // eslint-disable-line
 
 /*
 Below is some information about which pins control which servos (aka joints).

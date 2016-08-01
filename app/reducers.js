@@ -39,7 +39,7 @@ function routeReducer(state = routeInitialState, action) {
  * initialSyncData. This is just a passthrough.
  */
 function initialSyncDataReducer() {
-  return window.initialSyncData
+  return window.initialSyncData;
 }
 
 /**
