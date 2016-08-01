@@ -50,6 +50,12 @@ ${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}
       console.log(chalk.red(`${socket.id} disconnected`));
     },
   },
+
+  camera: {
+    start: (device) => {
+      console.log(`Camera initialised on ${chalk.magenta(device)} ${chalk.green('✓')}`);
+    },
+  },
 };
 
 module.exports = logger;

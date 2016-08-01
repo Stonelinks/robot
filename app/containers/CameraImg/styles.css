@@ -1,0 +1,9 @@
+.cameraImg {
+  text-align: center;
+}
+
+.cameraImg img {
+  width: 100%;
+  max-width: 620px;
+  max-height: 480px;
+}

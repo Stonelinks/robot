@@ -5,6 +5,7 @@ const logger = require('./logger');
 const ngrok = require('ngrok');
 
 const robotServer = require('./robotServer');
+const cameraServer = require('./cameraServer');
 
 const frontend = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -38,6 +39,7 @@ server.listen(port, (err) => {
 
   // Start your app.
   robotServer.start(app);
+  cameraServer.start(app);
 
   // Connect to ngrok in dev mode
   if (isDev) {

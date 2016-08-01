@@ -11,6 +11,7 @@
 
 import React from 'react';
 import AppBar from '../../components/AppBar';
+import CameraImg from '../CameraImg';
 import JointControl from '../JointControl';
 
 export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -19,6 +20,7 @@ export default class HomePage extends React.Component { // eslint-disable-line r
     return (
       <div>
         <AppBar title="Luke's Robot" iconElementLeft={<div />} />
+        <CameraImg />
         <JointControl />
       </div>
     );

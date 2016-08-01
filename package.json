@@ -126,6 +126,8 @@
     "ip": "1.1.2",
     "johnny-five": "0.9.60",
     "json-loader": "0.5.4",
+    "libjpeg": "3.0.0",
+    "linuxcam": "1.0.6",
     "material-ui": "0.15.0",
     "ngrok": "2.1.8",
     "null-loader": "0.1.1",

@@ -39,10 +39,12 @@ function routeReducer(state = routeInitialState, action) {
  * Creates the main reducer with the asynchronously loaded ones
  */
 import jointControlItemReducer from 'containers/JointControlItem/reducer';
+import cameraImgReducer from 'containers/CameraImg/reducer';
 export default function createReducer(asyncReducers) {
   return combineReducers({
     route: routeReducer,
     jointControlItem: jointControlItemReducer,
+    cameraImg: cameraImgReducer,
     ...asyncReducers,
   });
 }
