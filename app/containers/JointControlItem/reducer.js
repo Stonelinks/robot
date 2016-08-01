@@ -18,7 +18,7 @@ function jointControlItemReducer(state = initialState, action) {
   if (state.get('isInital')) {
     state = fromJS({ // eslint-disable-line
       isInital: false,
-      joints: window.initialSyncData.joints,
+      joints: window.initialSyncData && window.initialSyncData.joints,
     });
   }
 
