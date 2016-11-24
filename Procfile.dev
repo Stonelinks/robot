@@ -1,0 +1,2 @@
+web: REACT_APP_WSS_PORT=3002 npm run start:client
+api: PORT=3001 REACT_APP_WSS_PORT=3002 npm run server
