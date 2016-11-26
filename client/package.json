@@ -1,6 +1,6 @@
 {
-  "name": "hackygcs-client",
-  "version": "0.1.0",
+  "name": "robot-client",
+  "version": "0.0.0",
   "private": true,
   "devDependencies": {
   },

@@ -1,4 +1,4 @@
-# Hacky GCS webapp
+# Robot webapp
 
 Adapted from here: https://github.com/fullstackreact/food-lookup-demo
 
