@@ -15,14 +15,17 @@ RUN apk add --update \
     g++ \
     nodejs \
     make \
-    musl-dev \
-  && JOBS=MAX npm install --production --unsafe-perms \
-  && npm cache clean \
-  && rm -rf /tmp/* \
-  && apk del gcc g++ make musl-dev python-dev py-pip \
-  && rm -rf /var/cache/apk/*
+    musl-dev
 
-# build the client
+RUN JOBS=MAX npm install --production --unsafe-perms 
+
+
+#  && npm cache clean \
+#  && rm -rf /tmp/* \
+#  && apk del gcc g++ make musl-dev \
+#  && rm -rf /var/cache/apk/*
+
 RUN npm run build:client
+
 
 CMD ["npm", "run", "start"]
