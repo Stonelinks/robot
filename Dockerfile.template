@@ -1,4 +1,4 @@
-FROM resin/armhf-alpine:3.4
+FROM resin/%%RESIN_MACHINE_NAME%%-alpine:latest
 
 # Defines our working directory in container
 WORKDIR /usr/src/app
@@ -15,17 +15,36 @@ RUN apk add --update \
     g++ \
     nodejs \
     make \
+    curl \
     musl-dev
 
-RUN JOBS=MAX npm install --production --unsafe-perms 
+RUN npm install yarn
+RUN ./node_modules/.bin/yarn install
 
+#RUN npm install
 
+#RUN npm cache clean \
+#  && rm -rf /tmp/* \
+#  && apk del gcc g++ make musl-dev \
+#
+
+#RUN apk add --update \
+#    ffmpeg \
+#    gcc \
+#    g++ \
+#    nodejs \
+#    make \
+#    curl \
+#    musl-dev \
+#  && npm install -g yarn \
+#  && yarn install \
+#  && yarn cache clean \
 #  && npm cache clean \
 #  && rm -rf /tmp/* \
 #  && apk del gcc g++ make musl-dev \
 #  && rm -rf /var/cache/apk/*
+#  && rm -rf /var/cache/apk/*
 
 RUN npm run build:client
 
-
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "server"]
