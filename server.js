@@ -44,8 +44,8 @@ app.use(express.static('node_modules/broadwayjs/Player'));
 var ffmpegParams = [
 	'-f', 'video4linux2',
 	'-i', '/dev/video0',
-  "-framerate", 8,
-  "-video_size", WIDTH + 'x' + HEIGHT,
+  '-r', 30, // framerate
+  '-s', WIDTH + 'x' + HEIGHT,
   '-pix_fmt', 'yuv420p',
   '-c:v', 'libx264',
   '-b:v', '600k',

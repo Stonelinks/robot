@@ -87,7 +87,7 @@ class WebCam extends Component {
 }
 
 WebCam.defaultProps = {
-  address: 'ws://' + window.location.host,
+  address: null,
   width: 320 * 2,
   height: 240 * 2
 };
@@ -95,7 +95,7 @@ WebCam.defaultProps = {
 class App extends Component {
   render() {
 
-    const websocketAddress = 'ws://' + (process.env.REACT_APP_WSS_PORT ? window.location.hostname + ':' + process.env.REACT_APP_WSS_PORT : window.location.host)
+    const websocketAddress = 'wss://' + (process.env.REACT_APP_WSS_PORT ? window.location.hostname + ':' + process.env.REACT_APP_WSS_PORT : window.location.host)
     console.log(`websocket address: ${websocketAddress}`);
 
     return (
