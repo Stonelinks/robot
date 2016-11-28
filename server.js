@@ -41,27 +41,36 @@ var wss = new WebSocketServer(wssOptions);
 app.use(express.static('public'));
 app.use(express.static('node_modules/broadwayjs/Player'));
 
-var ffmpegParams = [
-	'-f', 'video4linux2',
-	'-i', '/dev/video0',
-  '-r', 30, // framerate
-  '-s', WIDTH + 'x' + HEIGHT,
-  '-pix_fmt', 'yuv420p',
-  '-c:v', 'libx264',
-  '-b:v', '600k',
-  '-bufsize', '600k',
-  '-vprofile', 'baseline',
-  '-tune', 'zerolatency',
-  '-f', 'rawvideo',
-  '-'
-];
+// var source = spawn('avconv', [
+// 	'-f', 'video4linux2',
+// 	'-i', '/dev/video0',
+//   '-r', 30, // framerate
+//   '-s', WIDTH + 'x' + HEIGHT,
+//   '-pix_fmt', 'yuv420p',
+//   '-c:v', 'libx264',
+//   '-b:v', '600k',
+//   '-bufsize', '600k',
+//   '-vprofile', 'baseline',
+//   '-tune', 'zerolatency',
+//   '-f', 'rawvideo',
+//   '-'
+// ]);
 
-// var ffmpeg = spawn('ffmpeg', ffmpegParams);
-var ffmpeg = spawn('avconv', ffmpegParams);
+var source = spawn('raspivid', [
+  '-fps', 30,
+  '-w', WIDTH,
+  '-h', HEIGHT,
+  '-b', '6000000',
+  '-pf', 'baseline',
+  '-t', '0',
+  '-ih',
+  '-n',
+  '-o', '-'
+]);
 
-ffmpeg.stdout.resume();
+source.stdout.resume();
 
-ffmpeg.stderr.pipe(process.stderr);
+source.stderr.pipe(process.stderr);
 
 // wss.on('connection', function (socket) {
 //   console.log('new websocket connection');
@@ -77,7 +86,7 @@ ffmpeg.stderr.pipe(process.stderr);
 // });
 
 
-ffmpeg.stdout.pipe(splitter);
+source.stdout.pipe(splitter);
 
 splitter.on('data', function (chunk) {
   try {
