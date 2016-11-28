@@ -56,7 +56,8 @@ var ffmpegParams = [
   '-'
 ];
 
-var ffmpeg = spawn('ffmpeg', ffmpegParams);
+// var ffmpeg = spawn('ffmpeg', ffmpegParams);
+var ffmpeg = spawn('avconv', ffmpegParams);
 
 ffmpeg.stdout.resume();
 
