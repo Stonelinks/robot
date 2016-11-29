@@ -72,16 +72,19 @@ class WebCam extends Component {
     });
   }
   render() {
-    return (
-      <div
-        ref={(c) => this.container = c}
-        height={this.props.height}
-        width={this.props.width}
-        style={{
-          height:`${this.props.height}px`,
-          width:`${this.props.width}px`,
+    return ( <
+      div ref = {
+        (c) => this.container = c }
+      height = { this.props.height }
+      width = { this.props.width }
+      style = {
+        {
+          height: `${this.props.height}px`,
+          width: `${this.props.width}px`,
           margin: '0 auto'
-        }} />
+        }
+      }
+      />
     )
   }
 }
@@ -91,11 +94,9 @@ WebCam.defaultProps = {
   width: 320 * 2,
   height: 240 * 2
 };
-
 class App extends Component {
   render() {
-
-    const websocketAddress = 'wss://' + (process.env.REACT_APP_WSS_PORT ? window.location.hostname + ':' + process.env.REACT_APP_WSS_PORT : window.location.host)
+    const websocketAddress = (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + (process.env.REACT_APP_WSS_PORT ? window.location.hostname + ':' + process.env.REACT_APP_WSS_PORT : window.location.host)
     console.log(`websocket address: ${websocketAddress}`);
 
     return (
