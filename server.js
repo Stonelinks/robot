@@ -43,15 +43,15 @@ app.use(express.static('node_modules/broadwayjs/Player'));
 
 var source = (process.env.NODE_ENV === 'production') ?
   spawn('raspivid', [
-  '-fps', 15,
+  '-fps', 10,
   '-w', WIDTH,
   '-h', HEIGHT,
-  '-b', '6000000',
+  '-b', '1000000',
   '-pf', 'baseline',
   '-t', '0',
-  '-ih',
-  '-hf',
-  '-n',
+  '-ih', // inline-headers
+  '-hf', // horizontal flip
+  '-n', // no display
   '-o', '-'
 ]) : spawn('avconv', [
   '-f', 'video4linux2',
