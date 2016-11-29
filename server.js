@@ -41,56 +41,41 @@ var wss = new WebSocketServer(wssOptions);
 app.use(express.static('public'));
 app.use(express.static('node_modules/broadwayjs/Player'));
 
-// var source = spawn('avconv', [
-// 	'-f', 'video4linux2',
-// 	'-i', '/dev/video0',
-//   '-r', 30, // framerate
-//   '-s', WIDTH + 'x' + HEIGHT,
-//   '-pix_fmt', 'yuv420p',
-//   '-c:v', 'libx264',
-//   '-b:v', '600k',
-//   '-bufsize', '600k',
-//   '-vprofile', 'baseline',
-//   '-tune', 'zerolatency',
-//   '-f', 'rawvideo',
-//   '-'
-// ]);
-
-var source = spawn('raspivid', [
-  '-fps', 30,
+var source = (process.env.NODE_ENV === 'production') ?
+  spawn('raspivid', [
+  '-fps', 15,
   '-w', WIDTH,
   '-h', HEIGHT,
   '-b', '6000000',
   '-pf', 'baseline',
   '-t', '0',
   '-ih',
+  '-hf',
   '-n',
   '-o', '-'
-]);
+]) : spawn('avconv', [
+  '-f', 'video4linux2',
+  '-i', '/dev/video0',
+  '-r', 30, // framerate
+  '-s', WIDTH + 'x' + HEIGHT,
+  '-pix_fmt', 'yuv420p',
+  '-c:v', 'libx264',
+  '-b:v', '600k',
+  '-bufsize', '600k',
+  '-vprofile', 'baseline',
+  '-tune', 'zerolatency',
+  '-f', 'rawvideo',
+  '-'
+])
 
 source.stdout.resume();
 
 source.stderr.pipe(process.stderr);
-
-// wss.on('connection', function (socket) {
-//   console.log('new websocket connection');
-//   // var streamHeader;
-//   //
-//   // streamHeader = new Buffer(8);
-//   // streamHeader.write(STREAM_MAGIC_BYTES);
-//   // streamHeader.writeUInt16BE(WIDTH, 4);
-//   // streamHeader.writeUInt16BE(HEIGHT, 6);
-//   //
-//   // console.log('sending mpeg header');
-//   // socket.send(streamHeader, { binary: true });
-// });
-
-
 source.stdout.pipe(splitter);
 
 splitter.on('data', function (chunk) {
   try {
-    wss.clients.forEach(function each(client) {
+    wss.clients.forEach(function(client) {
 
       if (client.busy) {
         return;
