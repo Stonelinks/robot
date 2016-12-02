@@ -36,6 +36,7 @@
     "ws": "1.1.0"
   },
   "scripts": {
+    "lint": "standard --fix",
     "start": "nf start -p $PORT",
     "dev": "nf start -p 3000 --procfile Procfile.dev",
     "server": "./node_modules/.bin/babel-node server.js",
@@ -43,5 +44,8 @@
     "build:client": "cd client && react-scripts build",
     "test:client": "cd client && react-scripts test --env=jsdom",
     "eject:client": "cd client && react-scripts eject"
+  },
+  "devDependencies": {
+    "standard": "8.6.0"
   }
 }
