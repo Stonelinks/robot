@@ -42,7 +42,7 @@ export default function (app, wss) {
 
   source.stdout.resume()
 
-  source.stderr.pipe(process.stderr)
+  // source.stderr.pipe(process.stderr)
   source.stdout.pipe(splitter)
 
   splitter.on('data', function (chunk) {
