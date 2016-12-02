@@ -1,21 +1,21 @@
 /* eslint consistent-return:0 */
 
-const express = require('express');
-const logger = require('./logger');
-const ngrok = require('ngrok');
+const express = require('express')
+const logger = require('./logger')
+const ngrok = require('ngrok')
 
-const robotServer = require('./robotServer');
-const cameraServer = require('./cameraServer');
+const robotServer = require('./robotServer')
+const cameraServer = require('./cameraServer')
 
-const frontend = require('./middlewares/frontendMiddleware');
-const isDev = process.env.NODE_ENV !== 'production';
+const frontend = require('./middlewares/frontendMiddleware')
+const isDev = process.env.NODE_ENV !== 'production'
 
-const app = express();
-const http = require('http');
+const app = express()
+const http = require('http')
 
-const socket = require('socket.io');
+const socket = require('socket.io')
 
-const io = socket();
+const io = socket()
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -23,34 +23,34 @@ const io = socket();
 // Initialize frontend middleware that will serve your JS app
 const webpackConfig = isDev
   ? require('../internals/webpack/webpack.dev.babel')
-  : require('../internals/webpack/webpack.prod.babel');
+  : require('../internals/webpack/webpack.prod.babel')
 
-app.use(frontend(webpackConfig));
+app.use(frontend(webpackConfig))
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 
-const server = http.createServer(app);
-app.io = io;
-app.io.attach(server);
+const server = http.createServer(app)
+app.io = io
+app.io.attach(server)
 server.listen(port, (err) => {
   if (err) {
-    return logger.error(err);
+    return logger.error(err)
   }
 
   // Start your app.
-  robotServer.start(app);
-  cameraServer.start(app);
+  robotServer.start(app)
+  cameraServer.start(app)
 
   // Connect to ngrok in dev mode
   if (isDev) {
     ngrok.connect(port, (innerErr, url) => {
       if (innerErr) {
-        return logger.error(innerErr);
+        return logger.error(innerErr)
       }
 
-      logger.appStarted(port, url);
-    });
+      logger.appStarted(port, url)
+    })
   } else {
-    logger.appStarted(port);
+    logger.appStarted(port)
   }
-});
+})

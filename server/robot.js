@@ -20,29 +20,29 @@ Right Button; Readout D70
 
 import  robotConfig from '../robotConfig'
 
-// import five from 'johnny-five'
+import five from 'johnny-five'
 
-// mock
-const five = {
-  Servo: function(config) {
-    this.value = 0
-    const _move = (ms) => {
-      console.log('servo', config.name, 'move', ms);
-      this.value = ms
-    }
-
-    this.center = _move
-    this.to = _move
-
-    return this
-  },
-  Board: function() {
-    this.on = (_, cb) => {
-      cb()
-    }
-    return this
-  }
-}
+// // mock
+// const five = {
+//   Servo: function(config) {
+//     this.value = 0
+//     const _move = (ms) => {
+//       console.log('servo', config.name, 'move', ms);
+//       this.value = ms
+//     }
+//
+//     this.center = _move
+//     this.to = _move
+//
+//     return this
+//   },
+//   Board: function() {
+//     this.on = (_, cb) => {
+//       cb()
+//     }
+//     return this
+//   }
+// }
 
 const SERVO_MOVE_DURATION_MS = process.env.SERVO_MOVE_DURATION_MS || 500
 
