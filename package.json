@@ -29,6 +29,7 @@
     "express": "4.13.3",
     "foreman": "1.4.1",
     "johnny-five": "0.10.6",
+    "rc-slider": "5.3.5",
     "react": "15.3.2",
     "react-dom": "15.3.2",
     "react-scripts": "0.7.0",

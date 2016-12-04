@@ -1,5 +1,4 @@
 
-
 /*
 Below is some information about which pins control which servos (aka joints).
 Note that the Arduino board is a Due,
@@ -18,25 +17,22 @@ Left Button; Readout D71
 Right Button; Readout D70
 */
 
-import  robotConfig from '../robotConfig'
+import robotConfig from '../robotConfig'
 
 import five from 'johnny-five'
 
 // // mock
 // const five = {
-//   Servo: function(config) {
+//   Servo: function (config) {
 //     this.value = 0
-//     const _move = (ms) => {
-//       console.log('servo', config.name, 'move', ms);
+//     this.to = (ms) => {
+//       console.log('servo', config.name, 'move', ms)
 //       this.value = ms
 //     }
 //
-//     this.center = _move
-//     this.to = _move
-//
 //     return this
 //   },
-//   Board: function() {
+//   Board: function () {
 //     this.on = (_, cb) => {
 //       cb()
 //     }
@@ -50,35 +46,43 @@ class Joint {
   constructor (jointConfig) {
     this.name = jointConfig.name
     this.servo = new five.Servo(jointConfig)
-    this.servo.center(SERVO_MOVE_DURATION_MS)
-    this.angle = this.servo.value
-    console.log('joint initialized', jointConfig);
+    console.log('joint initialized', jointConfig)
+    this.angle = (jointConfig.range[1] - jointConfig.range[0]) / 2.0
+    this.servo.to(this.angle, SERVO_MOVE_DURATION_MS)
   }
 
-  toJSON () {
-    return {
-      name: this.name,
-      angle: this.angle
-    }
-  }
+  // toJSON () {
+  //   return {
+  //     name: this.name,
+  //     angle: this.angle
+  //   }
+  // }
 
   moveServo (angle) {
     this.angle = parseInt(angle, 10)
     this.servo.to(angle, SERVO_MOVE_DURATION_MS)
   }
 
-  onSocketConnect (socket) {
-    socket.on(`${this.name}:servo`, (angle) => {
-      this.moveServo(parseFloat(angle))
-      socket.broadcast.send(`${this.name}:servo`, this.angle)
+  onWSConnect (ws) {
+    ws.on('message', (data) => {
+      const msg = JSON.parse(data)
+      if (msg.name === this.name) {
+        this.moveServo(parseFloat(msg.angle))
+        ws.broadcast(data)
+      }
     })
+
+    ws.send(JSON.stringify({
+      name: this.name,
+      angle: this.angle
+    }))
   }
 }
 
 class Robot {
   constructor () {
     this.joints = robotConfig.devices.joints.map(this.createJoint)
-    console.log('robot initialized');
+    console.log('robot initialized')
   }
 
   createJoint (jointConfig) {
@@ -91,20 +95,24 @@ class Robot {
     })
   }
 
-  toJSON () {
-    const jointData = {}
+  // toJSON () {
+  //   const jointData = {}
+  //   this.forEachJoint((joint) => {
+  //     jointData[joint.name] = joint.toJSON()
+  //   })
+  //   return {
+  //     joints: jointData
+  //   }
+  // }
+
+  onWSConnect (ws) {
     this.forEachJoint((joint) => {
-      jointData[joint.name] = joint.toJSON()
+      joint.onWSConnect(ws)
     })
-    return {
-      joints: jointData
-    }
   }
 
-  onSocketConnect (socket) {
-    this.forEachJoint((joint) => {
-      joint.onSocketConnect(socket)
-    })
+  onWSDisconnect () {
+    console.log('robot ws disconnect')
   }
 }
 
@@ -120,30 +128,25 @@ class Robot {
 //   },
 // });
 
-
 export default function (app, wss) {
-
   const board = new five.Board({
     repl: false
   })
 
   board.on('ready', () => {
     const robot = new Robot()
-    wss.on('connection', (socket) => {
-      socket.broadcast = function() {
-        wss.clients.forEach(function each(client) {
-  if (client !== socket)
-  {
-    client.send(data);
-  }
-});
+    wss.on('connection', (ws) => {
+      ws.broadcast = function (data) {
+        wss.clients.forEach((client) => {
+          if (client !== ws) {
+            client.send(data)
+          }
+        })
       }
-      robot.onSocketConnect(socket)
-      socket.on('sync', () => {
-        socket.emit('sync', robot.toJSON())
-      })
-      socket.on('disconnect', () => {
-        robot.onSocketDisconnect(socket)
+      robot.onWSConnect(ws)
+
+      ws.on('disconnect', () => {
+        robot.onWSDisconnect(ws)
       })
     })
   })
