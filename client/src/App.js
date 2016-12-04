@@ -92,7 +92,7 @@ class JointSlider extends Component {
     const joint = this.props.joint
 
     this.state = {
-      angle: (joint.range[1] - joint.range[0]) / 2.0
+      angle: (joint.range[0] + joint.range[1]) / 2.0
     }
 
     this.onSliderChange = this.onSliderChange.bind(this)

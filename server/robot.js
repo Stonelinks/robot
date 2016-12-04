@@ -13,7 +13,7 @@ class Joint {
     this.name = jointConfig.name
     this.servo = new five.Servo(jointConfig)
     console.log('joint initialized', jointConfig)
-    this.angle = (jointConfig.range[1] - jointConfig.range[0]) / 2.0
+    this.angle = (jointConfig.range[0] + jointConfig.range[1]) / 2.0
     this.servo.to(this.angle, SERVO_MOVE_DURATION_MS)
   }
 
