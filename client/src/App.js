@@ -13,6 +13,12 @@ const CAM_HEIGHT = 240 * 2
 const WIDTH = 1.5 * CAM_WIDTH
 const HEIGHT = 1.5 * CAM_HEIGHT
 
+navigator.serviceWorker.getRegistrations().then(function (registrations) {
+  for (let registration of registrations) {
+    registration.unregister()
+  }
+})
+
 class WebCam extends Component {
 
   get style () {
