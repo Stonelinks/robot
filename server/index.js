@@ -5,7 +5,7 @@ import {Server as WebSocketServer} from 'ws'
 const httpServer = http.createServer()
 const app = express()
 
-import camera from './camera'
+// import camera from './camera'
 import robot from './robot'
 
 app.use(express.static('public'))
@@ -36,7 +36,7 @@ if (process.env.REACT_APP_WSS_PORT) {
 
 const wss = new WebSocketServer(wssOptions)
 
-camera(app, wss)
+// camera(app, wss)
 robot(app, wss)
 
 // start the server
