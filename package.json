@@ -27,7 +27,7 @@
     "broadwayjs": "0.0.2",
     "bufferutil": "1.2.1",
     "express": "4.13.3",
-    "foreman": "1.4.1",
+    "foreman": "3.0.1",
     "johnny-five": "0.10.6",
     "rc-slider": "5.3.5",
     "react": "15.3.2",
