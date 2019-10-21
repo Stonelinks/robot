@@ -1,0 +1,13 @@
+#!/bin/bash
+set -ex
+
+find . \
+  -type f \
+  -name "*.cpp" -o \
+  -name "*.ino" -o\
+  -name "*.hpp" -o \
+  -name "*.cu" -o \
+  -name "*.c" -o \
+  -name "*.h" \
+  | grep -v "./build" \
+  | xargs clang-format -style=file -i 

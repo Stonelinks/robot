@@ -1,0 +1,5 @@
+#!/bin/bash
+set -ex
+
+arduino-cli upload -p /dev/ttyUSB0 --fqbn esp32:esp32:esp32 build/$CAMERA_SKETCH
+# arduino-cli upload -p /dev/ttyUSB1 --fqbn esp32:esp32:esp32 build/$CAMERA_SKETCH

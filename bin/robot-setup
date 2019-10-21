@@ -1,0 +1,17 @@
+#!/bin/bash
+set -ex
+
+if [ ! -f $PROJECT_ROOT/bin/arduino-cli ]; then
+    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=$PROJECT_ROOT/bin sh
+fi
+
+arduino-cli core update-index
+
+arduino-cli core install esp8266:esp8266
+arduino-cli core install esp32:esp32
+
+sudo python2 -m pip install pyserial
+
+arduino-cli lib install "OneButton"
+arduino-cli lib install "Adafruit Unified Sensor"
+arduino-cli lib install "ESP8266 and ESP32 Oled Driver for SSD1306 display"
