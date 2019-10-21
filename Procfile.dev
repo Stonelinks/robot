@@ -1,2 +1,0 @@
-web: REACT_APP_WSS_PORT=3002 REACT_APP_BROADWAY_PLAYER_WORKER=:3001/Decoder.js npm run start:client
-api: PORT=3001 REACT_APP_WSS_PORT=3002 npm run server
