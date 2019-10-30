@@ -297,7 +297,7 @@ void setup() {
   oled.setFont(ArialMT_Plain_16);
   oled.setTextAlignment(TEXT_ALIGN_CENTER);
   delay(50);
-  oled.drawString(x, y - 10, ":D");
+  oled.drawString(x, y - 10, ":(");
   oled.display();
 #endif
 
