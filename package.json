@@ -1,0 +1,16 @@
+{
+  "name": "robot",
+  "version": "1.0.0",
+  "description": "See README",
+  "main": "index.js",
+  "repository": "git@github.com:Stonelinks/robot.git",
+  "author": "Lucas Doyle",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^12.12.0",
+    "prettier": "^1.18.2",
+    "shelljs": "^0.8.3",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
+  }
+}

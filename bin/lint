@@ -10,3 +10,9 @@ find device \
   -name "*.c" -o \
   -name "*.h" \
   | xargs clang-format -style=file -i 
+
+find . \
+  -type f \
+  -name "*.ts" -o \
+  -name "*.js" \
+  | xargs prettier --write 

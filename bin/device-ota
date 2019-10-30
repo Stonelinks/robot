@@ -1,0 +1,4 @@
+#!/bin/bash
+set -ex
+
+ts-node ./bin/device-ota.ts
