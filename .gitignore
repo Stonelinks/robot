@@ -15,3 +15,4 @@ build
 npm-debug.log
 
 bin/arduino-cli
+3rdparty
