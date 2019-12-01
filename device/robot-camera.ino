@@ -6,26 +6,10 @@
 #include <WiFi.h>
 #include <Wire.h>
 
-/***************************************
- *  Board select
- **************************************/
+#include "CRtspSession.h"
+#include "OV2640.h"
+#include "OV2640Streamer.h"
 
-//! [T_CAMERA_MIC] With SSD1306 with microphone
-// #define TTGO_T_CAMERA_MIC_V16
-
-//! [T_CAMERA_V05 or TTGO_T_CAMERA_V1_7_2] With SSD1306, with BME280 position
-//! Different power management, the same pin
-#define TTGO_T_CAMERA_V05
-
-//! [T_CAMERA_PLUS] With 240*240TFT display, SD card slot
-// #define TTGO_T_CAMERA_PLUS
-
-//! [T_JORNAL] The most simplified version, without PSRAM
-// #define TTGO_T_JORNAL
-
-/***************************************
- *  Modules
- **************************************/
 #define ENABLE_SLEEP
 // #define ENABLE_IP5306
 
@@ -33,47 +17,15 @@
 // #define ENABLE_AS312
 #define ENABLE_BUTTON
 
-/***************************************
- *  WiFi
- **************************************/
-
 char *wifi_configs[][2] = {
     {"samsara-2.4", "samsara525"},
     {"DoyleNet", "pooppoop"},
     {"samsara", "samsara525"},
 };
-// #define CONFIGS_SIZE (sizeof(wifi_configs) / sizeof(wifi_configs[0]))
 
 /***************************************
  *  PinOUT
  **************************************/
-#if defined(TTGO_T_CAMERA_MIC_V16)
-#define PWDN_GPIO_NUM -1
-#define RESET_GPIO_NUM -1
-#define XCLK_GPIO_NUM 4
-#define SIOD_GPIO_NUM 18
-#define SIOC_GPIO_NUM 23
-
-#define Y9_GPIO_NUM 36
-#define Y8_GPIO_NUM 15
-#define Y7_GPIO_NUM 12
-#define Y6_GPIO_NUM 39
-#define Y5_GPIO_NUM 35
-#define Y4_GPIO_NUM 14
-#define Y3_GPIO_NUM 13
-#define Y2_GPIO_NUM 34
-#define VSYNC_GPIO_NUM 5
-#define HREF_GPIO_NUM 27
-#define PCLK_GPIO_NUM 25
-#define AS312_PIN 19
-#define BUTTON_1 0
-
-#define I2C_SDA 21
-#define I2C_SCL 22
-
-#undef ENABLE_IP5306
-#define SSD130_MODLE_TYPE GEOMETRY_128_64
-#elif defined(TTGO_T_CAMERA_V05) || defined(TTGO_T_CAMERA_V1_7_2)
 #define PWDN_GPIO_NUM 26
 #define RESET_GPIO_NUM -1
 #define XCLK_GPIO_NUM 32
@@ -98,65 +50,6 @@ char *wifi_configs[][2] = {
 #define I2C_SCL 22
 
 #define SSD130_MODLE_TYPE GEOMETRY_128_64
-
-#elif defined(TTGO_T_JORNAL)
-
-#define PWDN_GPIO_NUM -1
-#define RESET_GPIO_NUM 15
-#define XCLK_GPIO_NUM 27
-#define SIOD_GPIO_NUM 25
-#define SIOC_GPIO_NUM 23
-
-#define Y9_GPIO_NUM 19
-#define Y8_GPIO_NUM 36
-#define Y7_GPIO_NUM 18
-#define Y6_GPIO_NUM 39
-#define Y5_GPIO_NUM 5
-#define Y4_GPIO_NUM 34
-#define Y3_GPIO_NUM 35
-#define Y2_GPIO_NUM 17
-#define VSYNC_GPIO_NUM 22
-#define HREF_GPIO_NUM 26
-#define PCLK_GPIO_NUM 21
-
-#define I2C_SDA 14
-#define I2C_SCL 13
-
-#define BUTTON_1 32
-
-#define SSD130_MODLE_TYPE GEOMETRY_128_32
-
-#undef ENABLE_AS312
-
-#elif defined(TTGO_T_CAMERA_PLUS)
-#define PWDN_GPIO_NUM -1
-#define RESET_GPIO_NUM -1
-#define XCLK_GPIO_NUM 4
-#define SIOD_GPIO_NUM 18
-#define SIOC_GPIO_NUM 23
-
-#define Y9_GPIO_NUM 36
-#define Y8_GPIO_NUM 37
-#define Y7_GPIO_NUM 38
-#define Y6_GPIO_NUM 39
-#define Y5_GPIO_NUM 35
-#define Y4_GPIO_NUM 26
-#define Y3_GPIO_NUM 13
-#define Y2_GPIO_NUM 34
-#define VSYNC_GPIO_NUM 5
-#define HREF_GPIO_NUM 27
-#define PCLK_GPIO_NUM 25
-
-#define I2C_SDA -1
-#define I2C_SCL -1
-
-#undef ENABLE_SLEEP
-#undef ENABLE_IP5306
-#undef ENABLE_AS312
-#undef ENABLE_BUTTON
-#else
-#error "Please select board type"
-#endif
 
 #include "OLEDDisplayUi.h"
 #include "SSD1306.h"

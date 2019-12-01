@@ -16,20 +16,25 @@ arduino-cli lib install "OneButton"
 arduino-cli lib install "Adafruit Unified Sensor"
 arduino-cli lib install "ESP8266 and ESP32 Oled Driver for SSD1306 display"
 
-if [ ! -d $PROJECT_ROOT/3rdparty ]; then
-    mkdir -p $PROJECT_ROOT/3rdparty
+# THIRD_PARTY_DIR="$PROJECT_ROOT/$DEVICE_DIR/$DEVICE_SKETCH/3rdparty"
+THIRD_PARTY_DIR="$PROJECT_ROOT/3rdparty"
+
+if [ ! -d $THIRD_PARTY_DIR ]; then
+    mkdir -p $THIRD_PARTY_DIR
 fi
 
-if [ ! -d $PROJECT_ROOT/3rdparty ]; then
-    mkdir -p $PROJECT_ROOT/3rdparty
+if [ ! -d $THIRD_PARTY_DIR ]; then
+    mkdir -p $THIRD_PARTY_DIR
 fi
 
 RTSP_COMMIT_SHA="c0b1a1cc5d2465ac77b8caf0ba3c522b0607880f"
-if [ ! -d $PROJECT_ROOT/3rdparty/Micro-RTSP ]; then
-    mkdir -p $PROJECT_ROOT/3rdparty/Micro-RTSP
-    cd $PROJECT_ROOT/3rdparty/Micro-RTSP
+if [ ! -d $THIRD_PARTY_DIR/Micro-RTSP ]; then
+    mkdir -p $THIRD_PARTY_DIR/Micro-RTSP
+    cd $THIRD_PARTY_DIR/Micro-RTSP
     wget https://github.com/geeksville/Micro-RTSP/archive/$RTSP_COMMIT_SHA.zip
     unzip $RTSP_COMMIT_SHA.zip
     cp -r Micro-RTSP-$RTSP_COMMIT_SHA/src/* .
     rm -rf $RTSP_COMMIT_SHA.zip Micro-RTSP-$RTSP_COMMIT_SHA 
 fi
+
+yarn
