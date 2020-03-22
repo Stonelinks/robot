@@ -18,6 +18,7 @@
 #define ENABLE_BUTTON
 
 char *wifi_configs[][2] = {
+    {"New England Clam Router", "santa please hit me"},
     {"samsara-2.4", "samsara525"},
     {"DoyleNet", "pooppoop"},
     {"samsara", "samsara525"},
