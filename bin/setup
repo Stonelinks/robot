@@ -23,18 +23,14 @@ if [ ! -d $THIRD_PARTY_DIR ]; then
     mkdir -p $THIRD_PARTY_DIR
 fi
 
-if [ ! -d $THIRD_PARTY_DIR ]; then
-    mkdir -p $THIRD_PARTY_DIR
-fi
-
-RTSP_COMMIT_SHA="c0b1a1cc5d2465ac77b8caf0ba3c522b0607880f"
+MICRO_RTSP_COMMIT_SHA="43dd876fb9ffb882397b446cb4374bde280f9f69"
 if [ ! -d $THIRD_PARTY_DIR/Micro-RTSP ]; then
     mkdir -p $THIRD_PARTY_DIR/Micro-RTSP
     cd $THIRD_PARTY_DIR/Micro-RTSP
-    wget https://github.com/geeksville/Micro-RTSP/archive/$RTSP_COMMIT_SHA.zip
-    unzip $RTSP_COMMIT_SHA.zip
-    cp -r Micro-RTSP-$RTSP_COMMIT_SHA/src/* .
-    rm -rf $RTSP_COMMIT_SHA.zip Micro-RTSP-$RTSP_COMMIT_SHA 
+    wget https://github.com/geeksville/Micro-RTSP/archive/$MICRO_RTSP_COMMIT_SHA.zip
+    unzip $MICRO_RTSP_COMMIT_SHA.zip
+    cp -r Micro-RTSP-$MICRO_RTSP_COMMIT_SHA/src/* .
+    rm -rf $MICRO_RTSP_COMMIT_SHA.zip Micro-RTSP-$MICRO_RTSP_COMMIT_SHA 
 fi
 
 yarn
