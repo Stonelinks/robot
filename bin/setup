@@ -1,6 +1,11 @@
 #!/bin/bash
 set -ex
 
+sudo apt-get update -y
+sudo apt-get install -y --no-install-recommends jq
+
+direnv allow
+
 if [ ! -f $PROJECT_ROOT/bin/arduino-cli ]; then
     curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=$PROJECT_ROOT/bin sh
 fi
@@ -10,11 +15,11 @@ arduino-cli core update-index
 arduino-cli core install esp8266:esp8266
 arduino-cli core install esp32:esp32
 
-sudo python2 -m pip install pyserial
+# sudo python2 -m pip install pyserial
 
 arduino-cli lib install "OneButton"
 arduino-cli lib install "Adafruit Unified Sensor"
-arduino-cli lib install "ESP8266 and ESP32 Oled Driver for SSD1306 display"
+arduino-cli lib install "ESP8266 and ESP32 OLED driver for SSD1306 displays"
 
 # THIRD_PARTY_DIR="$PROJECT_ROOT/$DEVICE_DIR/$DEVICE_SKETCH/3rdparty"
 THIRD_PARTY_DIR="$PROJECT_ROOT/3rdparty"
@@ -31,6 +36,26 @@ if [ ! -d $THIRD_PARTY_DIR/Micro-RTSP ]; then
     unzip $MICRO_RTSP_COMMIT_SHA.zip
     cp -r Micro-RTSP-$MICRO_RTSP_COMMIT_SHA/src/* .
     rm -rf $MICRO_RTSP_COMMIT_SHA.zip Micro-RTSP-$MICRO_RTSP_COMMIT_SHA 
+fi
+
+echo "Checking if we have node $NODE_VERSION."
+if [ ! -f opt/node$NODE_VERSION/bin/node ]; then
+  NODE_DOWNLOAD_URL=https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-$OS-$ARCH.tar.gz
+  NODE_TMP_PATH=/tmp/node$NODE_VERSION.tar.gz
+  curl -fsSL "$NODE_DOWNLOAD_URL" -o $NODE_TMP_PATH
+  mkdir -p opt/node$NODE_VERSION
+  tar -C opt/node$NODE_VERSION -xzf $NODE_TMP_PATH --strip-components 1
+  rm $NODE_TMP_PATH
+fi
+
+echo "Checking if we have yarn $YARN_VERSION."
+if [ ! -f opt/node$YARN_VERSION/bin/yarn ]; then
+  YARN_DOWNLOAD_URL=https://github.com/yarnpkg/yarn/releases/download/v$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz
+  YARN_TMP_PATH=/tmp/yarn$YARN_VERSION.tar.gz
+  curl -fsSL "$YARN_DOWNLOAD_URL" -o $YARN_TMP_PATH
+  mkdir -p opt/yarn$YARN_VERSION
+  tar -C opt/yarn$YARN_VERSION -xzf $YARN_TMP_PATH --strip-components 1
+  rm $YARN_TMP_PATH
 fi
 
 yarn

@@ -11,11 +11,14 @@ fi
 
 mkdir $PROJECT_ROOT/build/$DEVICE_SKETCH
 
+  # --output-dir $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32 \
+  # --libraries $HOME/Arduino/libraries/ \
 arduino-cli compile \
-  -o $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32 \
+  --export-binaries  \
   --build-path $PROJECT_ROOT/build/$DEVICE_SKETCH \
-  --fqbn esp32:esp32:esp32 $DEVICE_DIR/$DEVICE_SKETCH.ino
+  --fqbn esp32:esp32:esp32 \
+  $DEVICE_DIR
 
-cp $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.bin $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.bin
-cp $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.elf $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.elf
-cp $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.partitions.bin $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.partitions.bin
+# cp $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.bin $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.bin
+# cp $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.elf $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.elf
+# cp $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.partitions.bin $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.partitions.bin

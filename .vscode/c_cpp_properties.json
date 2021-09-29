@@ -3,7 +3,9 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/home/ld/.arduino15/**",
+                "/home/ld/Arduino/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
