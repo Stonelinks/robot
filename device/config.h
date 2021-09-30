@@ -30,4 +30,4 @@
 #include "SSD1306.h"
 #define SSD1306_ADDRESS 0x3c
 
-#define ENABLE_BUTTON
+// #define ENABLE_BUTTON

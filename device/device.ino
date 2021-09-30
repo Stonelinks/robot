@@ -24,16 +24,13 @@ char ota_progress[23];
 String ip;
 String ssid;
 
-
 EventGroupHandle_t evGroup;
 
 SSD1306 oled(SSD1306_ADDRESS, I2C_SDA, I2C_SCL, SSD130_MODLE_TYPE);
 OLEDDisplayUi ui(&oled);
 
-int x;
-int y;
-
 #ifdef ENABLE_BUTTON
+bool en = false;
 OneButton button1(BUTTON_1, true);
 #endif
 
@@ -68,8 +65,10 @@ void connectToWifi() {
         message = "...";
       }
 
-      uiDrawString(0, -16, "Connecting" + message + "\nSSID: " +
-                               (String)wifi_configs[curr_network_index][0]);
+      uiDrawString(0, -30,
+                   "Connecting to\n" +
+                       (String)wifi_configs[curr_network_index][0] + "\n" +
+                       message);
 
       if (tries > 20) {
         break;
@@ -81,13 +80,12 @@ void connectToWifi() {
     if (WiFi.status() == WL_CONNECTED) {
       break;
     } else {
-
       curr_network_index++;
     }
   }
 
   if (WiFi.status() != WL_CONNECTED) {
-    uiDrawString(0, -10, "Not connected\nrestarting");
+    uiDrawString(0, 0, "Not connected\nrestarting");
     ESP.restart();
   }
 
@@ -96,8 +94,8 @@ void connectToWifi() {
   uiDrawString(0, 0, "WiFi connected");
 }
 
+#ifdef ENABLE_BUTTON
 void buttonClick() {
-  static bool en = false;
   xEventGroupClearBits(evGroup, 1);
   sensor_t *s = esp_camera_sensor_get();
   en = en ? 0 : 1;
@@ -114,60 +112,30 @@ void buttonLongPress() {
   oled.setFont(ArialMT_Plain_10);
   oled.clear();
 }
+#endif
 
 void drawFrame0(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x,
                 int16_t y) {
   display->setTextAlignment(TEXT_ALIGN_CENTER);
   display->setFont(ArialMT_Plain_10);
-  display->drawString(64 + x, y, device_name);
+
+  display->drawString(64 + x, 20 + y, device_name);
 }
 
 void drawFrame1(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x,
                 int16_t y) {
   display->setTextAlignment(TEXT_ALIGN_CENTER);
-
-  int y1 = 25;
-
-  if (oled.getHeight() == 32) {
-    y1 = 10;
-  }
-
   display->setFont(ArialMT_Plain_16);
-  display->drawString(64 + x, y1 + y, ip);
-  display->drawString(64 + x, 5 + y, ssid);
+
+  display->drawString(64 + x, 0 + y, ssid);
+  display->drawString(64 + x, 16 + y, ip);
 }
 
-// void drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x,
-//                 int16_t y) {
-//   display->setTextAlignment(TEXT_ALIGN_CENTER);
-//   display->setFont(ArialMT_Plain_10);
-
-//   if (oled.getHeight() == 32) {
-//     display->drawString(64 + x, 0 + y, "Camera Ready! Use");
-//     display->drawString(64 + x, 10 + y, "http://" + ip);
-//     display->drawString(64 + x, 16 + y, "to connect");
-//   } else {
-//     display->drawString(64 + x, 5 + y, "Camera Ready! Use");
-//     display->drawString(64 + x, 25 + y, "http://" + ip);
-//     display->drawString(64 + x, 45 + y, "to connect");
-//   }
-// }
-
-// FrameCallback frames[] = {drawFrame0, drawFrame1, drawFrame2};
 FrameCallback frames[] = {drawFrame0, drawFrame1};
 #define FRAMES_SIZE (sizeof(frames) / sizeof(frames[0]))
 
-void initUI() {
+void initUi() {
   oled.init();
-  x = oled.getWidth() / 2;
-  y = oled.getHeight() / 2;
-  // Wire.setClock(100000);  //! Reduce the speed and prevent the speed from
-  // being too high, causing the screen
-  oled.setFont(ArialMT_Plain_16);
-  oled.setTextAlignment(TEXT_ALIGN_CENTER);
-  delay(50);
-  oled.drawString(x, y - 10, device_name);
-  oled.display();
 
   if (!(evGroup = xEventGroupCreate())) {
     Serial.println("evGroup Fail");
@@ -181,36 +149,39 @@ void initUI() {
   button1.attachClick(buttonClick);
 #endif
 
-  oled.setFont(ArialMT_Plain_16);
-
-  ui.setTargetFPS(30);
+  ui.setTargetFPS(15);
   ui.setIndicatorPosition(BOTTOM);
   ui.setIndicatorDirection(LEFT_RIGHT);
   ui.setFrameAnimation(SLIDE_LEFT);
   ui.setFrames(frames, FRAMES_SIZE);
   ui.setTimePerFrame(6000);
+  ui.disableIndicator();
 }
 
 void uiDrawString(int x_offset, int y_offset, String message) {
   oled.clear();
-  oled.drawString(x + x_offset, y + y_offset, message);
+  oled.setTextAlignment(TEXT_ALIGN_CENTER);
+  oled.setFont(ArialMT_Plain_10);
+  oled.drawString((oled.getWidth() / 2) + x_offset,
+                  (oled.getHeight() / 2) + y_offset, message);
   oled.display();
   Serial.println(message);
 }
 
 void startCameraServer();
-char buff[128];
 
 void setup() {
-
   Serial.begin(115200);
+  // Serial.begin(9600);
   Serial.setDebugOutput(true);
   Serial.println();
 
-  if (I2C_SDA > 0)
+  if (I2C_SDA > 0) {
     Wire.begin(I2C_SDA, I2C_SCL);
+  }
 
-  initUI();
+  initUi();
+  initNet();
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -233,16 +204,17 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
+
   // init with high specs to pre-allocate larger buffers
-  if (psramFound()) {
-    config.frame_size = FRAMESIZE_UXGA;
-    config.jpeg_quality = 10;
-    config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 1;
-  }
+  // if (psramFound()) {
+  //   config.frame_size = FRAMESIZE_UXGA;
+  //   config.jpeg_quality = 10;
+  //   config.fb_count = 2;
+  // } else {
+  config.frame_size = FRAMESIZE_SVGA;
+  config.jpeg_quality = 12;
+  config.fb_count = 1;
+  // }
 
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -251,9 +223,8 @@ void setup() {
       ;
   }
 
-  // drop down frame size for higher initial frame rate
   sensor_t *s = esp_camera_sensor_get();
-  s->set_framesize(s, FRAMESIZE_QVGA);
+  s->set_vflip(s, 1);
 
   connectToWifi();
 
@@ -269,7 +240,7 @@ void setup() {
   ArduinoOTA.onEnd([]() { uiDrawString(0, 0, "OTA: End"); });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
     sprintf(ota_progress, "OTA Progress: %u%%\r", (progress / (total / 100)));
-    uiDrawString(0,0,ota_progress );
+    uiDrawString(0, 0, ota_progress);
   });
   ArduinoOTA.onError([](ota_error_t error) {
     String msg = "";
