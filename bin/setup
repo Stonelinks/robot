@@ -21,23 +21,6 @@ arduino-cli lib install "OneButton"
 arduino-cli lib install "Adafruit Unified Sensor"
 arduino-cli lib install "ESP8266 and ESP32 OLED driver for SSD1306 displays"
 
-# THIRD_PARTY_DIR="$PROJECT_ROOT/$DEVICE_DIR/$DEVICE_SKETCH/3rdparty"
-THIRD_PARTY_DIR="$PROJECT_ROOT/3rdparty"
-
-if [ ! -d $THIRD_PARTY_DIR ]; then
-    mkdir -p $THIRD_PARTY_DIR
-fi
-
-MICRO_RTSP_COMMIT_SHA="43dd876fb9ffb882397b446cb4374bde280f9f69"
-if [ ! -d $THIRD_PARTY_DIR/Micro-RTSP ]; then
-    mkdir -p $THIRD_PARTY_DIR/Micro-RTSP
-    cd $THIRD_PARTY_DIR/Micro-RTSP
-    wget https://github.com/geeksville/Micro-RTSP/archive/$MICRO_RTSP_COMMIT_SHA.zip
-    unzip $MICRO_RTSP_COMMIT_SHA.zip
-    cp -r Micro-RTSP-$MICRO_RTSP_COMMIT_SHA/src/* .
-    rm -rf $MICRO_RTSP_COMMIT_SHA.zip Micro-RTSP-$MICRO_RTSP_COMMIT_SHA 
-fi
-
 echo "Checking if we have node $NODE_VERSION."
 if [ ! -f opt/node$NODE_VERSION/bin/node ]; then
   NODE_DOWNLOAD_URL=https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-$OS-$ARCH.tar.gz
@@ -59,3 +42,5 @@ if [ ! -f opt/node$YARN_VERSION/bin/yarn ]; then
 fi
 
 yarn
+
+update-3rdparty-deps
