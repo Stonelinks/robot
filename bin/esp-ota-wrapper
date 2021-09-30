@@ -1,11 +1,11 @@
 #!/bin/bash
 set -ex
 
-ESPOTA="$ARDUINO_DATA/packages/esp32/hardware/esp32/1.0.4/tools/espota.py"
+ESPOTA="$ARDUINO_DATA/packages/esp32/hardware/esp32/1.0.6/tools/espota.py"
 
 # espota.py
 # use it like: python espota.py -i <ESP_IP_address> -I <Host_IP_address> -p <ESP_port> -P <Host_port> [-a password] -f <sketch.bin>
 # Or to upload SPIFFS image:                               
 # python espota.py -i <ESP_IP_address> -I <Host_IP_address> -p <ESP_port> -P <HOST_port> [-a password] -s -f <spiffs.bin>
 
-$ESPOTA -i $1 -p $2 -f $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.esp32.esp32.esp32.bin
+$ESPOTA -i $1 -p $2 -f $PROJECT_ROOT/build/$DEVICE_SKETCH/$DEVICE_SKETCH.ino.bin

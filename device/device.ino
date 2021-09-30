@@ -171,8 +171,8 @@ void uiDrawString(int x_offset, int y_offset, String message) {
 void startCameraServer();
 
 void setup() {
-  Serial.begin(115200);
-  // Serial.begin(9600);
+  // Serial.begin(115200);
+  Serial.begin(9600);
   Serial.setDebugOutput(true);
   Serial.println();
 
