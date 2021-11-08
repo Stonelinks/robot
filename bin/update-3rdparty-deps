@@ -39,4 +39,4 @@ function github_update() {
     fi
 }
 
-github_update kadavris Micro-RTSP 43dd876fb9ffb882397b446cb4374bde280f9f69
+# github_update kadavris Micro-RTSP 43dd876fb9ffb882397b446cb4374bde280f9f69
